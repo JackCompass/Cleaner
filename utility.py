@@ -1,3 +1,5 @@
+import hashlib
+
 def file_reader(file_obj, size = 1024):
 	""" This function will read 1024 byte of data or read complete data of a file depending upon the
 		meta condition. """
@@ -15,8 +17,10 @@ def generate_hash(file, meta, hash = hashlib.sha1):
 	hash_obj = hash()
 	file_obj = open(file, 'rb')
 	if meta:
-		hash_obj(file_obj.read(1024))
+		hash_obj.update(file_obj.read(1024))
 	else:
-		pass
+		for data in file_reader(file_obj):
+			hash_obj.update(data)
 	hashed = hash_obj.digest()
+	file_obj.close()
 	return hashed
